@@ -2,13 +2,13 @@
   ros__parameters:
 
     # Topics
-    pointCloudTopic: "/points_raw" # Point cloud data
-    imuTopic: "/imu_correct"                        # IMU data
+    pointCloudTopic: "/points" # Point cloud data
+    imuTopic: "/imu/data"                        # IMU data
     odomTopic: "odometry/imu"                    # IMU pre-preintegration odometry, same frequency as IMU
-    gpsTopic: "/gps/fix"                    # GPS odometry topic from navsat, see module_navsat.launch file
+    gpsTopic: "odometry/gpsz"                    # GPS odometry topic from navsat, see module_navsat.launch file
 
     # Frames
-    lidarFrame: "base_link"
+    lidarFrame: "lidar_link"
     baselinkFrame: "base_link"
     odometryFrame: "odom"
     mapFrame: "map"
@@ -21,24 +21,16 @@
 
     # Export settings
     savePCD: false                               # https://github.com/TixiaoShan/LIO-SAM/issues/3
-    savePCDDirectory: "/home/linzy5/lio_sam_map"         # in your home folder, starts and ends with "/". Warning: the code deletes "LOAM" folder then recreates it. See "mapOptimization" for implementation
+    savePCDDirectory: "/Downloads/LOAM/"         # in your home folder, starts and ends with "/". Warning: the code deletes "LOAM" folder then recreates it. See "mapOptimization" for implementation
 
     # Sensor Settings
-    sensor: velodyne                               # lidar sensor type, either 'velodyne' or 'ouster'
-    N_SCAN: 16                                   # number of lidar channel (i.e., 16, 32, 64, 128)
-    Horizon_SCAN: 1800                            # lidar horizontal resolution (Velodyne:1800, Ouster:512,1024,2048)
+    sensor: ouster                               # lidar sensor type, either 'velodyne' or 'ouster'
+    N_SCAN: 64                                   # number of lidar channel (i.e., 16, 32, 64, 128)
+    Horizon_SCAN: 512                            # lidar horizontal resolution (Velodyne:1800, Ouster:512,1024,2048)
     downsampleRate: 1                            # default: 1. Downsample your data if too many
     # points. i.e., 16 = 64 / 4, 16 = 16 / 1
     lidarMinRange: 1.0                           # default: 1.0, minimum lidar range to be used
     lidarMaxRange: 1000.0                        # default: 1000.0, maximum lidar range to be used
-
-    # #### ouster 32
-    # sensor: ouster                            # lidar sensor type, 'velodyne' or 'ouster' or 'livox'
-    # N_SCAN: 32                               # number of lidar channel (i.e., Velodyne/Ouster: 16, 32, 64, 128, Livox Horizon: 6)
-    # Horizon_SCAN: 1024                          # lidar horizontal resolution (Velodyne:1800, Ouster:512,1024,2048, Livox Horizon: 4000)
-    # downsampleRate: 1                           # default: 1. Downsample your data if too many points. i.e., 16 = 64 / 4, 16 = 16 / 1
-    # lidarMinRange: 1.0                          # default: 1.0, minimum lidar range to be used
-    # lidarMaxRange: 1000.0    
 
     # IMU Settings
     imuAccNoise: 3.9939570888238808e-03
@@ -49,33 +41,19 @@
     imuGravity: 9.80511
     imuRPYWeight: 0.01
 
-    ### IMU Settings: imu511
-    # imuAccNoise: 7.5142908756752448e-03
-    # imuGyrNoise: 8.1217622486477335e-04
-    # imuAccBiasN: 2.7007864433903280e-04
-    # imuGyrBiasN: 6.2462564143057225e-06
-    # imuGravity: -9.85
-    # imuRPYWeight: 0.01
-
     extrinsicTrans:  [ 0.0,  0.0,  0.0 ]
     extrinsicRot:    [ 1.0,  0.0,  0.0,
-                       0.0, 1.0,  0.0,
-                       0.0,  0.0, 1.0 ]
+                       0.0, -1.0,  0.0,
+                       0.0,  0.0, -1.0 ]
     extrinsicRPY: [ 1.0,  0.0,  0.0,
-                    0.0, 1.0,  0.0,
-                    0.0,  0.0, 1.0 ]
-    ### car lidar -> IMU
-    # extrinsicRot: [1, 0, 0,
-    #                 0, -1, 0,
-    #                 0, 0, -1]
-    # extrinsicRPY: [1, 0, 0,
-    #                 0, -1, 0,
-    #                 0, 0, -1]
+                    0.0, -1.0,  0.0,
+                    0.0,  0.0, -1.0 ]
+
     # LOAM feature threshold
     edgeThreshold: 1.0
     surfThreshold: 0.1
-    edgeFeatureMinValidNum: 20
-    surfFeatureMinValidNum: 200
+    edgeFeatureMinValidNum: 10
+    surfFeatureMinValidNum: 100
 
     # voxel filter paprams
     odometrySurfLeafSize: 0.4                     # default: 0.4 - outdoor, 0.2 - indoor

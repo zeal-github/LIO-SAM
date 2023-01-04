@@ -1,4 +1,4 @@
-#include "utility.hpp"
+#include "lio_sam/utility.hpp"
 
 #include <gtsam/geometry/Rot3.h>
 #include <gtsam/geometry/Pose3.h>
@@ -108,6 +108,12 @@ public:
             else
                 break;
         }
+        if (imuOdomQueue.empty())
+        {
+            RCLCPP_ERROR(get_logger(), "imuOdomQueue is empty");
+            return;
+        }
+        RCLCPP_INFO(get_logger(), "imuOdomQueue is not empty calculate odometry");
         Eigen::Isometry3d imuOdomAffineFront = odom2affine(imuOdomQueue.front());
         Eigen::Isometry3d imuOdomAffineBack = odom2affine(imuOdomQueue.back());
         Eigen::Isometry3d imuOdomAffineIncre = imuOdomAffineFront.inverse() * imuOdomAffineBack;
